@@ -209,7 +209,7 @@ async function handleApi(request, response, url) {
       return json(response, 400, { error: "Requête de connexion invalide." });
     }
     const configured = process.env.ADMIN_PASSWORD || "";
-    if (configured.length < 16) return json(response, 503, { error: "Définissez un mot de passe administrateur d'au moins 16 caractères dans .env." });
+    if (configured.length < 8) return json(response, 503, { error: "Définissez un mot de passe administrateur d'au moins 8 caractères dans .env." });
     const address = clientAddress(request);
     if (limited(`admin:${address}`, 8, 15 * 60 * 1000)) return json(response, 429, { error: "Trop de tentatives. Réessayez dans 15 minutes." });
     if (!safeEqual(String(body.password || ""), configured)) return json(response, 401, { error: "Mot de passe incorrect." });
