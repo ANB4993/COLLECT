@@ -326,7 +326,7 @@ const server = http.createServer(async (request, response) => {
 });
 
 const port = Number(process.env.PORT || 4173);
-const host = process.env.HOST || "127.0.0.1";
+const host = process.env.HOST || (process.env.RENDER ? "0.0.0.0" : "127.0.0.1");
 server.listen(port, host, () => {
   console.log(`Collecti est disponible sur http://${host}:${port}`);
   if (process.env.ADMIN_PASSWORD) console.log("Un seul accès administrateur est configuré.");
