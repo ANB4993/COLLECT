@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fa">
+    <title>Collecti — Tableau de bord</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <section class="auth-gate" id="adminLoginGate" hidden>
+      <form class="auth-card" id="adminLoginForm">
+        <a class="brand auth-brand" href="#" aria-label="Collecti"><span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span><span>collecti<span class="brand-dot">.</span></span></a>
+        <div class="payment-eyebrow"><span class="live-dot"></span> ESPACE PRIVÉ DE L'ASSOCIATION</div>
+        <h1>Connexion administrateur</h1>
+        <p>Connectez-vous pour gérer les collectes, consulter les cotisations et vérifier les paiements.</p>
+        <label for="adminPassword">Mot de passe administrateur</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" required minlength="16" placeholder="Votre mot de passe">
+        <div id="adminLoginError" class="form-error" role="alert" hidden></div>
+        <button class="button button-primary" type="submit">Se connecter</button>
+        <small>La connexion nécessite le serveur Collecti et son fichier .env.</small>
+      </form>
+    </section>
+    <div class="app-shell" id="adminApp" hidden>
+      <aside class="sidebar" id="sidebar">
+        <a class="brand" href="#" aria-label="Collecti, accueil">
+          <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span>collecti<span class="brand-dot">.</span></span>
+        </a>
+
+        <div class="workspace-label">ESPACE ASSOCIATION</div>
+        <button class="workspace-switch" type="button">
+          <span class="workspace-avatar">AS</span>
+          <span class="workspace-copy"><strong>Association Soleil</strong><small>Espace principal</small></span>
+          <span class="chevron">⌄</span>
+        </button>
+
+        <nav class="main-nav" aria-label="Navigation principale">
+          <div class="nav-caption">MENU</div>
+          <a class="nav-link is-active" href="#overview"><span class="nav-icon">▦</span>Vue d'ensemble</a>
+          <a class="nav-link" href="#collections"><span class="nav-icon">◉</span>Collectes<span class="nav-count" id="collectionNavCount" hidden>0</span></a>
+          <a class="nav-link" href="#payments"><span class="nav-icon">⇄</span>Paiements</a>
+          <a class="nav-link" href="#members"><span class="nav-icon">♙</span>Membres</a>
+          <a class="nav-link" href="#reports"><span class="nav-icon">▤</span>Rapports</a>
+          <div class="nav-caption nav-caption-spaced">PRÉFÉRENCES</div>
+          <a class="nav-link" href="#settings"><span class="nav-icon">⚙</span>Paramètres</a>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="help-card">
+            <span class="help-spark">✳</span>
+            <strong>Besoin d'un coup de main ?</strong>
+            <p>Notre équipe est là pour vous aider.</p>
+            <a href="mailto:bonjour@collecti.app">Contacter le support <span>↗</span></a>
+          </div>
+          <button class="profile-button" id="adminLogoutButton" type="button">
+            <span class="profile-avatar">AM</span>
+            <span class="profile-copy"><strong>Aminata Mbaye</strong><small>Administratrice</small></span>
+            <span class="profile-more">···</span>
+          </button>
+        </div>
+      </aside>
+
+      <main class="main-content" id="overview">
+        <header class="topbar">
+          <button class="mobile-menu" id="mobileMenu" aria-label="Ouvrir le menu" type="button">☰</button>
+          <div class="breadcrumb">Espace association <span>/</span> <strong>Vue d'ensemble</strong></div>
+          <div class="topbar-actions">
+            <button class="icon-button notification-button" aria-label="Notifications" type="button"><span>♧</span><i></i></button>
+            <span class="topbar-divider"></span>
+            <span class="topbar-date" id="todayLabel"></span>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <section class="page-heading">
+            <div>
+              <div class="eyebrow"><span class="live-dot"></span> VOTRE ASSOCIATION, EN UN COUP D'ŒIL</div>
+              <h1>Bonjour <span class="wave">✳</span></h1>
+              <p class="page-subtitle">Voici ce qui se passe dans votre espace aujourd'hui.</p>
+            </div>
+            <button class="button button-primary" id="newCollectionButton" type="button"><span class="plus">＋</span> Nouvelle collecte</button>
+          </section>
+
+          <section class="stats-grid" aria-label="Indicateurs principaux">
+            <article class="stat-card total-card">
+              <div class="stat-top"><span class="stat-label">Total collecté à ce jour</span><span class="stat-icon icon-violet">↗</span></div>
+              <div class="stat-value"><span id="totalCollected">0</span><span class="currency">FCFA</span></div>
+              <div class="stat-foot"><span class="stat-plain">Cotisations vérifiées par l'administrateur</span></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Membres autorisés</span><span class="stat-icon icon-green">♙</span></div>
+              <div class="stat-value"><span id="memberCount">0</span><span class="stat-note">membres</span></div>
+              <div class="stat-foot"><span class="stat-plain">Liste officielle des cotisants</span></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Collectes en cours</span><span class="stat-icon icon-orange">◎</span></div>
+              <div class="stat-value"><span id="activeCollectionCount">0</span><span class="stat-note">collectes actives</span></div>
+              <div class="stat-foot"><span class="stat-plain">Créez une collecte pour la partager</span></div>
+            </article>
+            <article class="stat-card">
+              <div class="stat-top"><span class="stat-label">Contribution moyenne</span><span class="stat-icon icon-blue">◈</span></div>
+              <div class="stat-value"><span id="averageContribution">0</span><span class="currency">FCFA</span></div>
+              <div class="stat-foot"><span class="stat-plain">Aucun paiement enregistré</span></div>
+            </article>
+          </section>
+
+          <section class="insights-grid">
+            <article class="panel chart-panel">
+              <div class="panel-heading">
+                <div><h2>Évolution des collectes</h2><p>Suivez le montant reçu au fil du temps</p></div>
+                <label class="select-wrap"><span class="sr-only">Période du graphique</span><select id="chartPeriod"><option value="week">7 derniers jours</option><option value="month" selected>Ce mois-ci</option><option value="year">Cette année</option></select></label>
+              </div>
+              <div class="chart-summary"><strong id="chartTotal">0 <small>FCFA</small></strong><span class="chart-summary-note">sur la période</span></div>
+              <div class="chart-wrap">
+                <div class="chart-y-axis" id="chartYAxis" aria-hidden="true"></div>
+                <div class="chart-area">
+                  <div class="chart-grid-lines" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+                  <svg class="chart-svg" id="chartSvg" viewBox="0 0 700 220" preserveAspectRatio="none" role="img" aria-label="Graphique des montants collectés au cours du mois"></svg>
+                  <div class="chart-x-axis" id="chartXAxis" aria-hidden="true"></div>
+                  <div class="chart-tooltip" id="chartTooltip"></div>
+                </div>
+              </div>
+              <div class="chart-legend"><span><i></i> Montant collecté</span><span class="chart-legend-note">Mis à jour après confirmation administrative</span></div>
+            </article>
+
+            <article class="panel goal-panel" id="collections">
+              <div class="panel-heading">
+                <div><h2>Collecte principale</h2><p>Le montant de contribution reste libre</p></div>
+                <button class="more-button" aria-label="Plus d'options" type="button">···</button>
+              </div>
+              <div class="goal-name"><span class="goal-emoji">◎</span><span><strong id="goalCollectionName">Aucune collecte créée</strong><small id="goalCollectionEnd">Créez une collecte pour la partager aux membres</small></span></div>
+              <div class="goal-progress-copy"><span>Montant collecté</span><strong><span id="goalCollected">0</span> <small>FCFA</small></strong></div>
+              <div class="progress-track" role="progressbar" aria-label="Progression vers l'objectif de collecte" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"><span id="goalProgressBar"></span></div>
+              <div class="goal-progress-label"><span id="goalPercent">Aucun objectif fixé</span><span>Objectif : <strong id="goalTarget">Facultatif</strong></span></div>
+              <div class="goal-divider"></div>
+              <div class="goal-bottom">
+                <div class="goal-members"><span><strong id="goalContributorCount">0</strong> contributeur enregistré</span></div>
+                <button class="text-button" type="button" id="shareCollectionButton">Partager le lien de paiement <span>↗</span></button>
+              </div>
+            </article>
+          </section>
+
+          <section class="panel transactions-panel" id="payments">
+            <div class="panel-heading transactions-heading">
+              <div><h2>Suivi des cotisations</h2><p>Les demandes restent en attente jusqu'à vérification par l'administrateur</p></div>
+              <div class="table-actions">
+                <label class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Rechercher un membre…" aria-label="Rechercher un membre"></label>
+                <button class="button button-secondary" type="button" id="exportButton"><span class="export-icon">↓</span> Exporter</button>
+              </div>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead><tr><th>MEMBRE</th><th>COLLECTE</th><th>DATE</th><th>MONTANT</th><th>STATUT</th><th>ACTION</th></tr></thead>
+                <tbody id="transactionsBody"></tbody>
+              </table>
+              <div class="empty-state" id="emptyState" hidden>Aucune demande de cotisation pour le moment.</div>
+            </div>
+            <div class="table-footer"><span id="tableCount">Aucun paiement enregistré</span><a href="#payments" id="viewAllButton" hidden>Voir tous les paiements <span>→</span></a></div>
+          </section>
+
+          <section class="panel members-panel" id="members">
+            <div class="panel-heading transactions-heading">
+            <div><h2>Liste officielle des membres</h2><p>Seuls le matricule, le grade et le nom sont affichés</p></div>
+            <label class="search-box member-search"><span>⌕</span><input id="memberSearch" type="search" placeholder="Rechercher par matricule, grade ou nom…" aria-label="Rechercher un membre par matricule, grade ou nom"></label>
+            </div>
+            <div class="table-scroll">
+              <table>
+              <thead><tr><th>MATRICULE</th><th>GRADE</th><th>NOM</th></tr></thead>
+                <tbody id="membersBody"></tbody>
+              </table>
+              <div class="empty-state" id="membersEmptyState" hidden>Aucun membre ne correspond à votre recherche.</div>
+            </div>
+            <div class="table-footer member-table-footer"><span id="membersTableCount"></span><span class="member-data-note">Aucun numéro de téléphone n’est affiché ou conservé dans le registre.</span><div class="pagination"><button class="button button-secondary" id="membersPrevious" type="button">Précédent</button><button class="button button-secondary" id="membersNext" type="button">Suivant</button></div></div>
+          </section>
+
+          <footer class="page-footer"><span>© 2026 Collecti</span><span><i></i> Liste officielle : <strong id="footerMemberCount">0</strong> membres</span><span class="demo-note">Wave non connecté · Les déclarations restent à vérifier</span></footer>
+        </div>
+      </main>
+    </div>
+
+    <div class="modal-backdrop" id="collectionModal" hidden>
+      <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <button class="modal-close" id="closeModal" type="button" aria-label="Fermer">×</button>
+        <div class="modal-icon">＋</div>
+        <h2 id="modalTitle">Créer une collecte</h2>
+        <p class="modal-description">Laissez vos membres choisir librement le montant de leur contribution.</p>
+        <form id="collectionForm">
+          <label for="collectionName">Nom de la collecte</label>
+          <input id="collectionName" name="name" placeholder="Ex. Soutien à l'association" required maxlength="60">
+          <label for="collectionGoal">Objectif de collecte <span>(facultatif)</span></label>
+          <div class="input-with-suffix"><input id="collectionGoal" name="goal" type="number" min="0" placeholder="Ex. 500 000"><span>FCFA</span></div>
+          <label for="collectionEnd">Date de fin <span>(facultatif)</span></label>
+          <input id="collectionEnd" name="endDate" type="date">
+          <div class="free-amount-note"><span>↗</span> Montant libre : chaque membre choisit combien contribuer.</div>
+          <button class="button button-primary modal-submit" type="submit">Créer la collecte</button>
+        </form>
+      </section>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

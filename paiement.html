@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f7f8fa">
+    <title>Cotiser — Collecti</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body class="payment-page">
+    <header class="payment-header">
+      <a class="brand" href="index.html" aria-label="Collecti, accueil">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>collecti<span class="brand-dot">.</span></span>
+      </a>
+      <span class="member-portal-label">CONTRIBUTION DE L'ASSOCIATION</span>
+    </header>
+
+    <main class="payment-main">
+      <div class="payment-intro">
+        <div class="payment-eyebrow"><span class="live-dot"></span> LIEN DE COTISATION</div>
+        <h1>Contribuer à l'association</h1>
+        <p>Ouvrez le lien commun, saisissez votre matricule et indiquez librement le montant de votre cotisation. Aucun compte n'est nécessaire.</p>
+      </div>
+
+      <section class="panel payment-card" id="contributionCard" aria-labelledby="memberLookupTitle">
+        <div class="payment-card-heading">
+          <span class="payment-step">1</span>
+          <div><h2 id="memberLookupTitle">Identifier le membre</h2><p>La fiche est vérifiée à partir du registre de l'association.</p></div>
+        </div>
+        <form id="memberLookupForm">
+          <label for="paymentMatricule">Matricule</label>
+          <div class="payment-lookup-row">
+            <input id="paymentMatricule" name="matricule" autocomplete="off" inputmode="numeric" placeholder="Ex. 26003" required aria-describedby="lookupHelp lookupError">
+            <button class="button button-primary" type="submit">Vérifier</button>
+          </div>
+          <small id="lookupHelp" class="field-hint">Le point dans le matricule est facultatif.</small>
+          <div id="lookupError" class="form-error" role="alert" hidden></div>
+        </form>
+
+        <div id="memberDetails" class="verified-member" hidden aria-live="polite">
+          <div class="verified-heading"><span class="verified-check">✓</span><strong>Membre reconnu</strong></div>
+          <dl class="member-details">
+            <div><dt>Nom</dt><dd id="verifiedName"></dd></div>
+            <div><dt>Grade</dt><dd id="verifiedGrade"></dd></div>
+            <div><dt>Matricule</dt><dd id="verifiedMatricule"></dd></div>
+          </dl>
+        </div>
+
+        <div class="payment-step-divider"></div>
+        <div class="payment-card-heading amount-heading">
+          <span class="payment-step">2</span>
+          <div><h2>Choisir le montant</h2><p>Chaque membre décide librement du montant à verser.</p></div>
+        </div>
+        <form id="contributionForm">
+          <p class="field-hint">Collecte en cours : <strong id="activeCollectionName">Vérifiez d'abord votre matricule</strong></p>
+          <label for="contributionAmount">Montant de votre cotisation</label>
+          <div class="input-with-suffix payment-amount-input">
+            <input id="contributionAmount" name="amount" type="number" min="1" max="50000000" step="1" inputmode="numeric" placeholder="Saisissez un montant" required disabled>
+            <span>FCFA</span>
+          </div>
+          <small class="field-hint">Après votre transfert Wave, l'administrateur vérifiera et confirmera le paiement.</small>
+          <button class="button button-primary payment-submit" id="submitContributionButton" type="submit" disabled>Envoyer ma déclaration</button>
+          <div id="contributionError" class="form-error" role="alert" hidden></div>
+        </form>
+        <div class="wave-unavailable" role="status"><span>i</span><p>Le paiement Wave n'est pas encore automatisé. Cette page transmet votre contribution à l'administrateur ; un montant déclaré ne sera jamais compté comme payé avant vérification.</p></div>
+      </section>
+
+      <section class="panel payment-card contribution-receipt" id="contributionReceipt" hidden role="status">
+        <div class="verified-heading"><span class="verified-check">✓</span><strong>Déclaration de cotisation envoyée</strong></div>
+        <h2>Votre déclaration est enregistrée</h2>
+        <p id="receiptMessage"></p>
+        <p class="receipt-note">Le paiement apparaîtra comme confirmé dans le tableau de bord après vérification par l'administrateur.</p>
+      </section>
+
+      <p class="payment-privacy">Aucun compte membre n'est créé. Cette page n'affiche pas la liste officielle.</p>
+      <a class="payment-back-link" href="index.html">← Collecti</a>
+    </main>
+
+    <footer class="payment-footer">© 2026 Collecti · Les contributions restent en attente jusqu'à leur vérification</footer>
+    <script src="payment.js"></script>
+  </body>
+</html>
